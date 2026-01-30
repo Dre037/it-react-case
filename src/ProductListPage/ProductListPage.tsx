@@ -15,12 +15,16 @@ export const ProductListPage: FC = () => {
     const [loadingSearch, setLoadingSerach] = useState(false)
     const debounceSearch = useDebounce(search, 400)
     const { products, loading, error, reload, toggleStatus } = useProducts()
-    const [selected, setSelected] = useState<Product | null>(null)
+    const [selectedId, setSelectedId] = useState<number | null>(null)
 
     const filtered = useMemo(() => {
         if (!debounceSearch) return products
         return products.filter(f => f.name.toLowerCase().includes(debounceSearch.toLowerCase()));
     }, [products, debounceSearch])
+
+    const selected = useMemo(() => products.find(f => f.id === selectedId) || null,
+        [products, selectedId]
+    )
 
     useEffect(() => {
         if (search === '') return
@@ -35,7 +39,7 @@ export const ProductListPage: FC = () => {
     }, [debounceSearch])
 
     return (
-        <Layout style={{ minHeight: '100vh', minWidth: '100vw', display: 'flex', justifyContent: 'center' }}>
+        <Layout style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
             <Layout.Content style={{ flex: 1, padding: 24, maxWidth: 1200, margin: '0 auto', width: '100%' }}>
                 <Space style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
                     <Title level={2} style={{ marginBottom: 8 }}>
@@ -47,9 +51,9 @@ export const ProductListPage: FC = () => {
                     </Text>
                 </Space>
                 <SearchBar value={search} onChange={setSearch}></SearchBar>
-                <ProductList products={filtered} loading={loading || loadingSearch} onSelect={setSelected}></ProductList>
+                <ProductList products={filtered} loading={loading || loadingSearch} onSelect={(product) => setSelectedId(product.id)}></ProductList>
                 {error && <ErrorState onRetry={reload} />}
-                <ProductDetails product={selected} onClose={() => setSelected(null)} onToggleStatus={toggleStatus}></ProductDetails>
+                <ProductDetails product={selected} onClose={() => setSelectedId(null)} onToggleStatus={toggleStatus}></ProductDetails>
             </Layout.Content>
         </Layout>
     )

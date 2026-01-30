@@ -1,7 +1,11 @@
-import { Drawer, Descriptions, Space, Tag, Switch } from "antd"
+import { Drawer, Descriptions, Space, Tag, Switch, Divider, Progress } from "antd"
 import type { Product } from "../../types/Product"
-import type { FC } from "react"
+import { useEffect, useState, type FC } from "react"
 import { formatCurrency } from "../../utils/Currency"
+import Title from "antd/es/typography/Title";
+import Text from "antd/es/typography/Text";
+import './ProductDetail.css'
+import { DollarOutlined, FileTextOutlined, RiseOutlined } from "@ant-design/icons";
 
 interface Props {
     product: Product | null,
@@ -47,22 +51,70 @@ export const ProductDetails: FC<Props> = ({ product, onClose, onToggleStatus }) 
     }
 
     const items = Object.entries(product).map(([key, value]) => {
-        if (key === 'id') return
+        if (['active', 'id'].includes(key)) return
         else return (
             <Descriptions.Item label={mappedDesc[key]}>
                 {formatValues(key, value)}
             </Descriptions.Item>
         )
-    }
+    })
 
-    )
+    const isMobile = window.innerWidth < 786
+
+    const [animate, setAnimate] = useState(false)
+
+    useEffect(() => {
+        if (product) {
+            setAnimate(false)
+            setTimeout(() => setAnimate(true), 50)
+        }
+    }, [product])
+
+    const usagePercent = Math.round((product.spent / product.limit) * 100);
 
     return (
         <Drawer
-            title="Detalhes do produto"
             open={product && true}
             onClose={onClose}
-            size={360}>
+            size={isMobile ? '100%' : 720} style={{ padding: 24 }}>
+            <div className={`card-visual ${animate ? 'flip' : ''}`}>
+                <div className="card-face">
+                    <Space style={{ justifyContent: 'space-between' }}>
+                        <Tag color={product.active ? 'blue' : 'red'}>
+                            {product.active ? 'Ativo' : 'Inativo'}
+                        </Tag>
+                        <Switch checked={product.active} onChange={() => onToggleStatus(product.id)}></Switch>
+                    </Space>
+                    <Title level={3} style={{ color: '#fff', margin: '16px 0 0 0' }}>{product.name}</Title>
+                    <Text style={{ color: '#fff' }}>{product.type}</Text>
+                </div>
+            </div>
+            <Space orientation="horizontal" size={24} style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16}}>
+                <Space>
+                    <FileTextOutlined></FileTextOutlined>
+                    <Text>{product.description}</Text>
+                </Space>
+                <Space>
+                    <RiseOutlined></RiseOutlined>
+                    <Text>Juros: {product.interestRate}%</Text>
+                </Space>
+            </Space>
+            <Space orientation="vertical" size={24} style={{ width: '100%' }}>
+                <Space orientation="horizontal" style={{ width: '100%', justifyContent: 'space-between' }}>
+                    <Space>
+                        <DollarOutlined></DollarOutlined>
+                        <Text>{formatCurrency(product.limit)}</Text>
+                    </Space>
+                    <Space>
+                        <RiseOutlined></RiseOutlined>
+                        <Text>Gastos: <Text strong>{formatCurrency(product.spent)}</Text></Text>
+                    </Space>
+                </Space>
+
+                <Progress percent={usagePercent} status={usagePercent > 75 ? 'exception' : 'active'}></Progress>
+            </Space>
+            <Divider></Divider>
+            <Space></Space>
             <Descriptions column={1} bordered size="small">
                 {items}
             </Descriptions>

@@ -22,7 +22,7 @@ export const ProductCard: FC<Props> = ({ product, onClick }) => {
                     <CreditCardOutlined style={{ fontSize: 16 }}></CreditCardOutlined>
                     <Text strong>{product.name}</Text>
                 </Space>
-                <Tag color={product.active ? 'green' : 'red'}>
+                <Tag color={product.active ? 'blue' : 'red'}>
                     {product.active ? 'Ativo' : 'Inativo'}
                 </Tag>
             </Space>
