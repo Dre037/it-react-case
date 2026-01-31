@@ -36,11 +36,13 @@ Criar uma interface que permita:
 
 ```bash
 npm install
+```
 
 ### 2️⃣ Rodar a aplicação
 
 ```bash
 npm run dev
+```
 
 A aplicação ficará disponível em:
 http://localhost:5173
@@ -53,6 +55,7 @@ O projeto possui testes unitários focados em comportamento do usuário, utiliza
 
 ```bash
 npm test
+```
 
 ### O que está sendo validado
 
