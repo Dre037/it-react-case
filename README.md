@@ -68,6 +68,7 @@ Os testes utilizam **mocks para componentes do Ant Design**, garantindo isolamen
 
 ## 📁 Estrutura de pastas
 
+```plaintext
 src/
 │
 ├── ProductListPage/ # Página principal da aplicação
@@ -93,6 +94,7 @@ src/
 │
 ├── setupTests.ts # Configuração do Testing Library
 └── main.tsx # Ponto de entrada da aplicação
+```
 
 ## 🧩 Componentes principais
 
