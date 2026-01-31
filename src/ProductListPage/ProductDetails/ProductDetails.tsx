@@ -51,9 +51,10 @@ export const ProductDetails: FC<Props> = ({ product, onClose, onToggleStatus }) 
     }
 
     const items = Object.entries(product).map(([key, value]) => {
-        if (['active', 'id'].includes(key)) return
-        else return (
-            <Descriptions.Item label={mappedDesc[key]}>
+        if (['active', 'id'].includes(key)) return null
+
+        return (
+            <Descriptions.Item key={key} label={mappedDesc[key]}>
                 {formatValues(key, value)}
             </Descriptions.Item>
         )
